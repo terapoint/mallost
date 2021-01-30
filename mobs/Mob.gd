@@ -1,60 +1,62 @@
 extends Area2D
 class_name Mob
 
-export var speed = 200
+enum STATE {IDLE, MOVING, BACK}
 
-enum DIRECTION {NONE, LEFT, RIGHT}
+export var speed = 0
+export(STATE) var state = STATE.IDLE
+export(Constants.DIRECTIONS) var direction = Constants.DIRECTIONS.RIGHT
 
-var screen_size = Vector2()
 var velocity = Vector2()
-var _direction = DIRECTION.NONE
-
-func _ready():
-	screen_size = get_viewport_rect().size
 
 func flip():
-	match _direction:
-		DIRECTION.LEFT:
+	match direction:
+		Constants.DIRECTIONS.LEFT:
 			$Head.flip_h = false
 			$UpperBody.flip_h = false
 			$LowerBody.flip_h = false
-		DIRECTION.RIGHT:
+		Constants.DIRECTIONS.RIGHT:
 			$Head.flip_h = true
 			$UpperBody.flip_h = true
 			$LowerBody.flip_h = true
 
-func play_animation():
-	match _direction:
-		DIRECTION.LEFT:
-			$Head.play("left")
-			$UpperBody.play("left")
-			$LowerBody.play("left")
-		DIRECTION.RIGHT:
-			$Head.play("right")
-			$UpperBody.play("right")
-			$LowerBody.play("right")
-		_:
-			$Head.play("idle")
-			$UpperBody.play("idle")
-			$LowerBody.play("idle")
+func animate():
+	match state:
+		STATE.MOVING:
+			$Head.play("moving")
+			$UpperBody.play("moving")
+			$LowerBody.play("moving")
+		STATE.BACK:
+			$Head.play("back")
+			$UpperBody.play("back")
+			$LowerBody.play("back")
+		STATE.IDLE:
+			$Head.stop()
+			$UpperBody.stop()
+			$LowerBody.stop()
 
-func start_moving(direction):
+func start_moving(dir=Constants.DIRECTIONS.RIGHT):
 	velocity = Vector2()
-	_direction = direction
+	direction = dir
 	match direction:
-		DIRECTION.LEFT:
-			flip()
-			play_animation()
+		Constants.DIRECTIONS.LEFT:
 			velocity.x = -1
-		DIRECTION.RIGHT:
-			flip()
-			play_animation()
+		Constants.DIRECTIONS.RIGHT:
 			velocity.x = 1
 	velocity = velocity * speed
+	state = STATE.MOVING
+	flip()
+	animate()
 
 func stop_moving():
-	_direction = DIRECTION.NONE
+	state = STATE.IDLE
 	velocity = Vector2()
+	animate()
+
+func turn_back():
+	state = STATE.BACK
+	velocity = Vector2()
+	animate()
 
 func _process(delta):
 	position += velocity * delta

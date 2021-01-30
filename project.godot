@@ -10,23 +10,71 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Area2D",
+"class": "Character",
+"language": "GDScript",
+"path": "res://mobs/Character.gd"
+}, {
+"base": "Area2D",
+"class": "Client",
+"language": "GDScript",
+"path": "res://mobs/client/Client.gd"
+}, {
+"base": "Area2D",
 "class": "Mob",
 "language": "GDScript",
 "path": "res://mobs/Mob.gd"
+}, {
+"base": "Area2D",
+"class": "Obj",
+"language": "GDScript",
+"path": "res://objects/Object.gd"
+}, {
+"base": "Character",
+"class": "SecurityChar",
+"language": "GDScript",
+"path": "res://mobs/security/SecurityChar.gd"
+}, {
+"base": "Position2D",
+"class": "Spawner",
+"language": "GDScript",
+"path": "res://mobs/Spawner.gd"
 } ]
 _global_script_class_icons={
-"Mob": ""
+"Character": "",
+"Client": "",
+"Mob": "",
+"Obj": "",
+"SecurityChar": "",
+"Spawner": ""
 }
 
 [application]
 
 config/name="mallost"
+run/main_scene="res://Game.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Constants="*res://Constants.gd"
+Utils="*res://Utils.gd"
+Events="*res://Events.gd"
+GameManager="*res://GameManager.gd"
 
 [display]
 
-window/size/width=960
-window/size/height=640
+window/size/width=560
+window/size/height=320
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
+
+[input]
+
+ui_touch={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
 
 [rendering]
 
