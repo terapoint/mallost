@@ -3,7 +3,7 @@ class_name Character
 
 enum STATE {IDLE, MOVING, BACK}
 
-export var speed = 0
+export var speed = 0 setget set_speed
 export(STATE) var state = STATE.IDLE
 export(Constants.DIRECTIONS) var direction = Constants.DIRECTIONS.RIGHT
 
@@ -50,6 +50,9 @@ func turn_back():
 	state = STATE.BACK
 	velocity = Vector2()
 	animate()
+
+func set_speed(value):
+	speed = value
 
 func _process(delta):
 	position += velocity * delta

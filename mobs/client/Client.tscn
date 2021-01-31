@@ -7,7 +7,6 @@
 [ext_resource path="res://mobs/client/animations/blue_head.tres" type="SpriteFrames" id=5]
 
 [node name="Client" instance=ExtResource( 1 )]
-position = Vector2( 116.163, 102.169 )
 script = ExtResource( 2 )
 
 [node name="Shape" parent="." index="0"]
@@ -24,3 +23,6 @@ animation = "moving"
 frames = ExtResource( 4 )
 animation = "moving"
 frame = 3
+[connection signal="input_event" from="." to="." method="_on_Client_input_event"]
+[connection signal="mouse_entered" from="." to="." method="_on_Client_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_Client_mouse_exited"]

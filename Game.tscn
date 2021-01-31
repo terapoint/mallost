@@ -4,7 +4,7 @@
 [ext_resource path="res://background.png" type="Texture" id=2]
 [ext_resource path="res://mobs/welcome/WelcomeChar.tscn" type="PackedScene" id=3]
 [ext_resource path="res://background_top.png" type="Texture" id=4]
-[ext_resource path="res://inventory/assets/frame.png" type="Texture" id=5]
+[ext_resource path="res://inventory/Inventory.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Trigger.gd" type="Script" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -19,8 +19,9 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="SecurityChar" parent="." instance=ExtResource( 3 )]
+[node name="WelcomeChar" parent="." instance=ExtResource( 3 )]
 position = Vector2( 107.099, 129.151 )
+speed = 0
 
 [node name="Foreground" type="Sprite" parent="."]
 texture = ExtResource( 4 )
@@ -53,50 +54,40 @@ shape = SubResource( 1 )
 
 [node name="Spawners" type="Node" parent="."]
 
-[node name="SpawnerStart1" parent="Spawners" instance=ExtResource( 1 )]
-position = Vector2( -16, 204 )
+[node name="SpawnerStart0" parent="Spawners" instance=ExtResource( 1 )]
+position = Vector2( -12, 180 )
 mob_z_index = 1
-mob_speed = 20
-
-[node name="SpawnerStart2" parent="Spawners" instance=ExtResource( 1 )]
-position = Vector2( -16, 224 )
-mob_z_index = 2
 mob_speed = 30
 
-[node name="SpawnerStart3" parent="Spawners" instance=ExtResource( 1 )]
-position = Vector2( -16, 240 )
-mob_z_index = 3
+[node name="SpawnerStart1" parent="Spawners" instance=ExtResource( 1 )]
+position = Vector2( -12, 196 )
+mob_z_index = 1
 mob_speed = 40
 
+[node name="SpawnerStart2" parent="Spawners" instance=ExtResource( 1 )]
+position = Vector2( -12, 212 )
+mob_z_index = 2
+mob_speed = 60
+
+[node name="SpawnerStart3" parent="Spawners" instance=ExtResource( 1 )]
+position = Vector2( -12, 232 )
+mob_z_index = 3
+mob_speed = 70
+
 [node name="SpawnerEnd" parent="Spawners" instance=ExtResource( 1 )]
-position = Vector2( 576, 176 )
+position = Vector2( 576, 152 )
 mob_speed = 20
 direction = 0
 
-[node name="Inventory" type="Node" parent="."]
+[node name="SecuritySpawner" parent="Spawners" instance=ExtResource( 1 )]
+position = Vector2( -12, 152 )
+mob = null
+mob_speed = 40
 
-[node name="Sprite" type="Sprite" parent="Inventory"]
-position = Vector2( 208, 300 )
-texture = ExtResource( 5 )
-
-[node name="Sprite2" type="Sprite" parent="Inventory"]
-position = Vector2( 368, 300 )
-texture = ExtResource( 5 )
-
-[node name="Sprite3" type="Sprite" parent="Inventory"]
-position = Vector2( 336, 300 )
-texture = ExtResource( 5 )
-
-[node name="Sprite4" type="Sprite" parent="Inventory"]
-position = Vector2( 304, 300 )
-texture = ExtResource( 5 )
-
-[node name="Sprite5" type="Sprite" parent="Inventory"]
-position = Vector2( 272, 300 )
-texture = ExtResource( 5 )
-
-[node name="Sprite6" type="Sprite" parent="Inventory"]
-position = Vector2( 240, 300 )
-texture = ExtResource( 5 )
+[node name="Inventory" parent="." instance=ExtResource( 5 )]
+margin_left = 120.0
+margin_top = 268.0
+margin_right = 120.0
+margin_bottom = 268.0
 [connection signal="area_entered" from="Start" to="Start" method="_on_area_entered"]
 [connection signal="area_entered" from="End" to="End" method="_on_area_entered"]

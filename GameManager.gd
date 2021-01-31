@@ -55,7 +55,7 @@ const OBJECTS = {
 const ANIMATION_PATH_FORMAT = "res://mobs/client/animations/%s_%s.tres"
 const CLIENT_ID_FORMAT = "%s|%s|%s"
 
-var difficulty = 40
+var difficulty = 100
 var client_ressources = {}
 var client_with_object = {}
 var available_objects = [
@@ -69,8 +69,11 @@ var available_objects = [
 	KEY_OBJECTS.TOY
 ]
 var client_spawned := 0
+var object_on_hold = {}
+var selected_inventory_slot: Slot
 
 onready var _obj = preload("res://objects/Object.tscn")
+onready var _security_char = preload("res://mobs/security/SecurityChar.tscn")
 
 func _ready():
 	randomize()
@@ -78,6 +81,9 @@ func _ready():
 	Events.connect("request_spawn", self, "_on_spawn_requested")
 	Events.connect("on_mob_despawn", self, "_on_mob_despawn")
 	Events.connect("on_object_dropped", self, "_on_object_dropped")
+	Events.connect("on_object_clicked", self, "_on_object_clicked")
+	Events.connect("on_mob_clicked", self, "_on_mob_clicked")
+	Events.connect("select_inventory_slot", self, "_on_inventory_slot_selected")
 	for color in COLORS:
 		for part in PARTS:
 			var path = ANIMATION_PATH_FORMAT % [COLORS[color], PARTS[part]]
@@ -107,33 +113,52 @@ func _get_random_object():
 	if len(available_objects) > 0:
 		return available_objects.pop_back()
 
-func can_generate():
-	pass
-
-func _get_odd():
+func _should_add_object():
 	var available = len(available_objects)
 	if available == 0:
-		return 0
-	return randi() % (available * 10)
+		return false
+	var rand = randi() % 100
+	return rand < 10
 
-func _on_spawn_requested(spawner, mob):
+func _on_spawn_requested(spawner: Spawner, mob: Mob):
 	if client_spawned > difficulty:
 		mob.queue_free()
 		return
 	client_spawned += 1
-	var odd = _get_odd()
-	var obj = null
 	var id = _get_random_color_id()
-	if odd < len(available_objects) and spawner.direction == Constants.DIRECTIONS.RIGHT:
-		obj = available_objects.pop_back()
-		client_with_object[id] = obj
-	mob.init(id, obj)
+	var obj_id = null
+	if _should_add_object() and spawner.direction == Constants.DIRECTIONS.RIGHT:
+		obj_id = available_objects.pop_back()
+		client_with_object[id] = obj_id
+	mob.init(id, spawner, obj_id)
 	Events.emit_signal("spawn", spawner, mob)
 
 func _on_mob_despawn(mob):
 	client_spawned -= 1
 
-func _on_object_dropped(obj, mob):
-	var item: Obj = _obj.instance()
-	item.init(OBJECTS[obj], mob.position, mob.z_index)
-	mob.get_parent().add_child(item)
+func _on_object_dropped(obj_id, mob):
+	var obj: Obj = _obj.instance()
+	obj.init(obj_id, OBJECTS[obj_id], mob.position, mob.spawner)
+
+func _on_object_clicked(obj):
+	var obj_key = hash(obj)
+	if obj_key in object_on_hold:
+		return
+	object_on_hold[hash(obj)] = obj
+	var security_char: SecurityChar = _security_char.instance()
+	security_char.init(obj)
+	Events.emit_signal("spawn", obj.spawner, security_char)
+
+func _on_mob_clicked(mob: Client):
+	if not selected_inventory_slot or selected_inventory_slot.is_empty():
+		mob.show_what()
+		return
+	mob.stop()
+	var obj = selected_inventory_slot.remove()
+	var security_char: SecurityChar = _security_char.instance()
+	security_char.init(obj, mob)
+	Events.emit_signal("spawn", null, security_char)
+	
+
+func _on_inventory_slot_selected(slot):
+	selected_inventory_slot = slot
