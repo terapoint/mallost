@@ -3,10 +3,11 @@ class_name Mob
 
 enum STATE {IDLE, MOVING, BACK}
 
-export var speed = 0
+export var speed = 0 setget set_speed
 export(STATE) var state = STATE.IDLE
 export(Constants.DIRECTIONS) var direction = Constants.DIRECTIONS.RIGHT
 
+const _animation_speed_divider = 30.0
 var velocity = Vector2()
 
 func flip():
@@ -57,6 +58,15 @@ func turn_back():
 	state = STATE.BACK
 	velocity = Vector2()
 	animate()
+
+func set_speed(value):
+	if value == 0:
+		return
+	speed = value
+	var speed_scale = value / _animation_speed_divider
+	$Head.speed_scale = speed_scale
+	$UpperBody.speed_scale = speed_scale
+	$LowerBody.speed_scale = speed_scale
 
 func _process(delta):
 	position += velocity * delta

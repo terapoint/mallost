@@ -36,13 +36,14 @@ func stop():
 func show_what():
 	$Popup.question()
 
-func give(obj: Obj):
+func give(obj: Obj) -> bool:
 	if obj.id == object_id:
 		Utils.reparent(obj)
 		$Popup.object(obj)
-	else:
-		$Popup.no()
-	start_moving(direction)
+		return true
+	$Popup.no()
+	$Timer.start()
+	return false
 
 func _on_Client_input_event(_viewport, event, _shape_idx):
 	if event.is_action_pressed("ui_touch") \
@@ -59,3 +60,7 @@ func _on_Client_mouse_exited():
 	if direction == Constants.DIRECTIONS.LEFT:
 		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 		scale = Vector2.ONE
+
+
+func _on_Timer_timeout():
+	start_moving(direction)

@@ -22,8 +22,9 @@ func _on_SecurityChar_area_entered(area):
 	if area == mob_to_stop:
 		stop_moving()
 		$Popup.object(obj)
-		area.give(obj)
-		start_moving(Constants.DIRECTIONS.LEFT)
+		if area.give(obj):
+			obj = null
+		$Timer.start()
 
 func _on_Timer_timeout():
 	Events.emit_signal("add_object_to_inventoty", obj)

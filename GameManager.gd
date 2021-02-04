@@ -158,7 +158,6 @@ func _on_mob_clicked(mob: Client):
 	var security_char: SecurityChar = _security_char.instance()
 	security_char.init(obj, mob)
 	Events.emit_signal("spawn", null, security_char)
-	
 
 func _on_inventory_slot_selected(slot):
 	selected_inventory_slot = slot

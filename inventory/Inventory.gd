@@ -7,6 +7,8 @@ func _ready():
 	Events.connect("select_inventory_slot", self, "_on_slot_selected")
 
 func _on_add_object(obj):
+	if not obj:
+		return
 	for slot in $Grid.get_children():
 		if slot.is_empty():
 			slot.add(obj)
