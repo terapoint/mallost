@@ -1,16 +1,5 @@
 extends Node
 
-enum KEY_PARTS {
-	HEAD,
-	UPPER_BODY,
-	LOWER_BODY
-}
-const PARTS = {
-	KEY_PARTS.HEAD: "head",
-	KEY_PARTS.UPPER_BODY: "upper_body",
-	KEY_PARTS.LOWER_BODY: "lower_body",
-}
-
 enum KEY_COLORS {
 	BLUE,
 	BROWN,
@@ -22,14 +11,14 @@ enum KEY_COLORS {
 	YELLOW
 }
 const COLORS = {
-	KEY_COLORS.BLUE: "blue",
-	KEY_COLORS.BROWN: "brown",
-	KEY_COLORS.ROSE: "rose",
-	KEY_COLORS.LIGHT_GREEN: "light_green",
-	KEY_COLORS.GREEN: "green",
-	KEY_COLORS.PURPLE: "purple",
-	KEY_COLORS.RED: "red",
-	KEY_COLORS.YELLOW: "yellow"
+	KEY_COLORS.BLUE: "83d4ff",
+	KEY_COLORS.BROWN: "5f2b04",
+	KEY_COLORS.ROSE: "fa89f5",
+	KEY_COLORS.LIGHT_GREEN: "1dcd78",
+	KEY_COLORS.GREEN: "47760f",
+	KEY_COLORS.PURPLE: "a20cda",
+	KEY_COLORS.RED: "ff2222",
+	KEY_COLORS.YELLOW: "eada39"
 }
 enum KEY_OBJECTS {
 	BOOK,
@@ -52,11 +41,9 @@ const OBJECTS = {
 	KEY_OBJECTS.TOY: preload("res://objects/assets/toy.png"),
 }
 
-const ANIMATION_PATH_FORMAT = "res://mobs/client/animations/%s_%s.tres"
 const CLIENT_ID_FORMAT = "%s|%s|%s"
 
 var difficulty = 100
-var client_ressources = {}
 var client_with_object = {}
 var available_objects = [
 	KEY_OBJECTS.BOOK,
@@ -84,10 +71,6 @@ func _ready():
 	Events.connect("on_object_clicked", self, "_on_object_clicked")
 	Events.connect("on_mob_clicked", self, "_on_mob_clicked")
 	Events.connect("select_inventory_slot", self, "_on_inventory_slot_selected")
-	for color in COLORS:
-		for part in PARTS:
-			var path = ANIMATION_PATH_FORMAT % [COLORS[color], PARTS[part]]
-			client_ressources[COLORS[color] + "|" + PARTS[part]] = load(path)
 
 func _get_random_key():
 	var head_color = COLORS[randi() % len(KEY_COLORS)]
@@ -100,14 +83,6 @@ func _get_random_color_id():
 	while color in client_with_object:
 		color = _get_random_key()
 	return color
-
-func get_animations(id: String):
-	var colors = id.split("|", false)
-	return [
-		client_ressources[colors[KEY_PARTS.HEAD] + "|" + PARTS[KEY_PARTS.HEAD]],
-		client_ressources[colors[KEY_PARTS.UPPER_BODY] + "|" + PARTS[KEY_PARTS.UPPER_BODY]],
-		client_ressources[colors[KEY_PARTS.LOWER_BODY] + "|" + PARTS[KEY_PARTS.LOWER_BODY]],
-	]
 
 func _get_random_object():
 	if len(available_objects) > 0:

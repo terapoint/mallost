@@ -163,4 +163,5 @@ margin_right = 34.0
 margin_bottom = 4.0
 rect_min_size = Vector2( 7, 4 )
 color = Color( 0.278431, 0.462745, 0.0588235, 1 )
+
 [connection signal="gui_input" from="Panel" to="." method="_on_Panel_gui_input"]

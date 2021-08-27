@@ -7,14 +7,14 @@ var object_id
 var drop_position_x = 0
 var spawner
 
-func init(id, spawn, obj_id = null):
+func init(id: String, spawn, obj_id = null):
 	randomize()
 	object_id = obj_id
 	spawner = spawn
-	var animations = GameManager.get_animations(id)
-	$Head.frames = animations[GameManager.KEY_PARTS.HEAD]
-	$UpperBody.frames = animations[GameManager.KEY_PARTS.UPPER_BODY]
-	$LowerBody.frames = animations[GameManager.KEY_PARTS.LOWER_BODY]
+	var colors = id.split("|", false)
+	$Head.material.set_shader_param("REPLACEMENT_COLOR", Color(colors[0]))
+	$UpperBody.material.set_shader_param("REPLACEMENT_COLOR", Color(colors[1]))
+	$LowerBody.material.set_shader_param("REPLACEMENT_COLOR", Color(colors[2]))
 
 func _ready():
 	if object_id != null and direction == Constants.DIRECTIONS.RIGHT:
